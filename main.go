@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
-	"net/http"
 	"todo-api/database"
+	"todo-api/infrastructure/persistence"
+	"todo-api/interface/handler"
+	"todo-api/usecase"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -20,9 +22,13 @@ func main() {
 		fmt.Printf("Response Body: %s\n", string(resBody))
 	}))
 
-	app.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "hello, world!!")
-	})
+	taskPersistence := persistence.NewTaskPersistence()
+	taskUsecase := usecase.NewTaskUsecase(taskPersistence)
+	taskHandler := handler.NewTaskHandler(taskUsecase)
+
+	app.GET("/task/:userId", taskHandler.HandleGetAllTasks)
+	app.POST("/task/:userId", taskHandler.HandleCreateTask)
+	app.PUT("/task/:userId/:taskId", taskHandler.HandleUpdateTask)
 
 	app.Logger.Fatal(app.Start(":3000"))
 }
