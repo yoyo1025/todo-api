@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strconv"
 	"todo-api/domain/model"
+	"todo-api/interface/dto"
 	"todo-api/usecase"
 
 	"github.com/labstack/echo/v4"
@@ -34,7 +35,7 @@ func (th TaskHandler) HandleGetAllTasks(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, "データ取得に失敗")
 	}
-	return c.JSON(http.StatusOK, tasks)
+	return c.JSON(http.StatusOK, dto.ToTaskResponses(tasks))
 }
 
 func (th TaskHandler) HandleCreateTask(c echo.Context) error {
@@ -50,5 +51,5 @@ func (th TaskHandler) HandleUpdateTask(c echo.Context) error {
 	if err := c.Bind(&task); err != nil {
 		return err
 	}
-	return th.taskUsecase.UpdateTask(c, task.GetUserId(), task.GetTitle(), task.GetDetail(), task.GetStatus())
+	return th.taskUsecase.UpdateTask(c, task.GetId(), task.GetUserId(), task.GetTitle(), task.GetDetail(), task.GetStatus())
 }

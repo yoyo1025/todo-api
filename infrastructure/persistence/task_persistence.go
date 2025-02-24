@@ -25,6 +25,7 @@ func toDomain(r TaskRecord) (*model.Task, error) {
 	if task == nil {
 		return nil, errors.New("タスクの生成に失敗しました")
 	}
+	task.SetId(r.ID)
 	return task, nil
 }
 
@@ -56,6 +57,20 @@ func (tp *TaskPersistence) FindAll(userId int64) ([]*model.Task, error)  {
 		tasks = append(tasks, dom)
 	}
 	return tasks, nil
+}
+
+func (tp *TaskPersistence) FindById(taskId int64) (*model.Task, error) {
+	var record TaskRecord
+	result := tp.db.First(&record, taskId)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	task, err := toDomain(record)
+	if err != nil {
+		return nil, err
+	}
+	return task, nil
 }
 
 func (tp *TaskPersistence) Create(task *model.Task) error {

@@ -11,7 +11,7 @@ import (
 type ITaskUsecase interface {
 	FindAllTask(c echo.Context, userId int64) ([]*model.Task, error)
 	CreateTask(c echo.Context, userId int64, title, detail string, status int64) error
-	UpdateTask(c echo.Context, userId int64, title, detail string, status int64) error
+	UpdateTask(c echo.Context, taskId, userId int64, title, detail string, status int64) error
 }
 
 type TaskUsecase struct {
@@ -43,8 +43,14 @@ func (tu *TaskUsecase) CreateTask(c echo.Context, userId int64, title, detail st
 }
 
 // タスク情報を更新する
-func (tu *TaskUsecase) UpdateTask(c echo.Context, userId int64, title, detail string, status int64) error {
-	updatedTask := model.NewTask(userId, title, detail, status)
+func (tu *TaskUsecase) UpdateTask(c echo.Context, taskId, userId int64, title, detail string, status int64) error {
+	exsistingTask, err := tu.taskRepository.FindById(taskId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusNotFound, "対称のタスクが見つかりません")
+	}
+	
+	updatedTask := exsistingTask.Update(title, detail, status)
+
 	if err := tu.taskRepository.Update(updatedTask); err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "タスクの更新に失敗")
 	}
