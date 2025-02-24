@@ -2,6 +2,7 @@ package persistence
 
 import (
 	"errors"
+	"time"
 	"todo-api/domain/model"
 	"todo-api/domain/repository"
 
@@ -78,7 +79,12 @@ func (tp *TaskPersistence) Create(task *model.Task) error {
 	return tp.db.Create(&rec).Error
 }
 
-func (tp *TaskPersistence) Update(task *model.Task) error {
+func (tp *TaskPersistence) Update(taskId int64, task *model.Task) error {
 	rec := toRecord(task)
-	return tp.db.Save(&rec).Error
+	return tp.db.Model(&TaskRecord{}).Where("id = ?", uint(taskId)).Updates(map[string]interface{}{
+		"updated_at": time.Now(),
+		"title": rec.Title,
+		"detail": rec.Detail,
+		"status": rec.Status,
+	}).Error
 }

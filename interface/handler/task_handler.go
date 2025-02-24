@@ -3,7 +3,6 @@ package handler
 import (
 	"net/http"
 	"strconv"
-	"todo-api/domain/model"
 	"todo-api/interface/dto"
 	"todo-api/usecase"
 
@@ -55,9 +54,22 @@ func (th TaskHandler) HandleCreateTask(c echo.Context) error {
 }
 
 func (th TaskHandler) HandleUpdateTask(c echo.Context) error {
-	var task model.Task
+	userId, err := strconv.Atoi(c.Param("userId"))
+	if err != nil {
+		return err
+	}
+	taskId, err := strconv.Atoi(c.Param("taskId"))
+	if err != nil {
+		return err
+	}
+
+	var task dto.TaskRequest
 	if err := c.Bind(&task); err != nil {
 		return err
 	}
-	return th.taskUsecase.UpdateTask(c, task.GetId(), task.GetUserId(), task.GetTitle(), task.GetDetail(), task.GetStatus())
+	err = th.taskUsecase.UpdateTask(c, int64(taskId), int64(userId), task.Title, task.Detail, task.Status)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusCreated, "タスクを更新しました")
 }

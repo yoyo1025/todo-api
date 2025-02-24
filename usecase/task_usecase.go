@@ -51,7 +51,7 @@ func (tu *TaskUsecase) UpdateTask(c echo.Context, taskId, userId int64, title, d
 
 	updatedTask := exsistingTask.Update(title, detail, status)
 
-	if err := tu.taskRepository.Update(updatedTask); err != nil {
+	if err := tu.taskRepository.Update(taskId, updatedTask); err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "タスクの更新に失敗")
 	}
 	return nil
