@@ -39,11 +39,19 @@ func (th TaskHandler) HandleGetAllTasks(c echo.Context) error {
 }
 
 func (th TaskHandler) HandleCreateTask(c echo.Context) error {
-	var task model.Task
+	userId, err := strconv.Atoi(c.Param("userId"))
+	if err != nil {
+		return err
+	}
+	var task dto.TaskRequest
 	if err := c.Bind(&task); err != nil {
 		return err
 	}
-	return th.taskUsecase.CreateTask(c, task.GetUserId(), task.GetTitle(), task.GetDetail(), task.GetStatus())
+	err = th.taskUsecase.CreateTask(c, int64(userId), task.Title, task.Detail, task.Status)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusCreated, "タスクを作成しました")
 }
 
 func (th TaskHandler) HandleUpdateTask(c echo.Context) error {

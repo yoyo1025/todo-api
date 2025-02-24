@@ -48,7 +48,7 @@ func (tu *TaskUsecase) UpdateTask(c echo.Context, taskId, userId int64, title, d
 	if err != nil {
 		return echo.NewHTTPError(http.StatusNotFound, "対称のタスクが見つかりません")
 	}
-	
+
 	updatedTask := exsistingTask.Update(title, detail, status)
 
 	if err := tu.taskRepository.Update(updatedTask); err != nil {
