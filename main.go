@@ -13,7 +13,7 @@ import (
 
 func main() {
 
-	database.GetDB()
+	db := database.GetDB()
 	app := echo.New()
 
 	// BodyDumpミドルウェアを追加
@@ -22,7 +22,7 @@ func main() {
 		fmt.Printf("Response Body: %s\n", string(resBody))
 	}))
 
-	taskPersistence := persistence.NewTaskPersistence()
+	taskPersistence := persistence.NewTaskPersistence(db)
 	taskUsecase := usecase.NewTaskUsecase(taskPersistence)
 	taskHandler := handler.NewTaskHandler(taskUsecase)
 

@@ -11,8 +11,10 @@ type TaskPersistence struct {
 	db *gorm.DB
 }
 
-func NewTaskPersistence() repository.ITaskRepository {
-	return &TaskPersistence{}
+func NewTaskPersistence(db *gorm.DB) repository.ITaskRepository {
+	return &TaskPersistence{
+		db: db,
+	}
 }
 
 
