@@ -22,6 +22,13 @@ func main() {
 		fmt.Printf("Response Body: %s\n", string(resBody))
 	}))
 
+	app.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+    AllowOrigins:     []string{"http://localhost:3000"},
+    AllowMethods:     []string{echo.GET, echo.POST, echo.PUT, echo.DELETE, echo.OPTIONS},
+    AllowHeaders:     []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
+    AllowCredentials: true,
+}))
+
 	taskPersistence := persistence.NewTaskPersistence(db)
 	taskUsecase := usecase.NewTaskUsecase(taskPersistence)
 	taskHandler := handler.NewTaskHandler(taskUsecase)
