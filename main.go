@@ -48,5 +48,5 @@ func main() {
 		return c.JSON(http.StatusOK, "hello world!")
 	})
 
-	app.Logger.Fatal(app.Start(":3000"))
+	app.Logger.Fatal(app.Start("0.0.0.0:3000"))
 }
