@@ -29,6 +29,12 @@ func main() {
     AllowCredentials: true,
 }))
 
+	userPersistence := persistence.NewUserPersistence(db)
+	userUsecase := usecase.NewUserUsecase(userPersistence)
+	userHandler := handler.NewUserHandler(userUsecase)
+
+	app.POST("/api/auth/github", userHandler.HandleLogin)
+
 	taskPersistence := persistence.NewTaskPersistence(db)
 	taskUsecase := usecase.NewTaskUsecase(taskPersistence)
 	taskHandler := handler.NewTaskHandler(taskUsecase)
@@ -36,7 +42,6 @@ func main() {
 	app.GET("/task/:userId", taskHandler.HandleGetAllTasks)
 	app.POST("/task/:userId", taskHandler.HandleCreateTask)
 	app.PUT("/task/:userId/:taskId", taskHandler.HandleUpdateTask)
-	app.POST("/api/auth/github", handler.HandleGitHubAuth())
 
 	app.Logger.Fatal(app.Start(":3000"))
 }

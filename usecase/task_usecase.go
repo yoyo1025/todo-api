@@ -42,7 +42,7 @@ func (tu *TaskUsecase) CreateTask(c echo.Context, userId int64, title, detail st
 	return nil
 }
 
-// タスク情報を更新する
+// タスク情報を更新する(タスクの削除もこのユーズケースを用いる status=2 にする)
 func (tu *TaskUsecase) UpdateTask(c echo.Context, taskId, userId int64, title, detail string, status int64) error {
 	exsistingTask, err := tu.taskRepository.FindById(taskId)
 	if err != nil {

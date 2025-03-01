@@ -15,6 +15,10 @@ func NewUser(name, email string) *User {
 	}
 }
 
+func (u *User) GetID() int64 {
+	return int64(u.ID)
+}
+
 func (u *User) GetName() string {
 	return u.name
 }
