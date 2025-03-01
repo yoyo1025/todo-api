@@ -36,6 +36,7 @@ func main() {
 	app.GET("/task/:userId", taskHandler.HandleGetAllTasks)
 	app.POST("/task/:userId", taskHandler.HandleCreateTask)
 	app.PUT("/task/:userId/:taskId", taskHandler.HandleUpdateTask)
+	app.POST("/api/auth/github", handler.HandleGitHubAuth())
 
 	app.Logger.Fatal(app.Start(":3000"))
 }

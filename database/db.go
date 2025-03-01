@@ -38,8 +38,7 @@ func initDB() {
 
 	fmt.Println("Successfully connected to the database!")
 
-	// db.AutoMigrate(&model.User{})
-	db.AutoMigrate(&persistence.TaskRecord{})
+	db.AutoMigrate(&persistence.TaskRecord{}, &persistence.UserRecord{})
 }
 
 func GetDB() *gorm.DB {
