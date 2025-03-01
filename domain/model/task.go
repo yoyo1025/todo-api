@@ -19,6 +19,7 @@ func NewTask(userId int64, title, detail string, status int64) *Task {
 	}
 }
 
+// モデルの内容を詰め替える
 func (t *Task) Update(title, detail string, status int64) *Task {
 	return &Task{
 		userId: t.userId,

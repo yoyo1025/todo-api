@@ -9,8 +9,11 @@ import (
 )
 
 type ITaskUsecase interface {
+	// 指定したユーザのタスクをすべて取得する
 	FindAllTask(c echo.Context, userId int64) ([]*model.Task, error)
+	// タスクを新規作成する
 	CreateTask(c echo.Context, userId int64, title, detail string, status int64) error
+	// タスク情報を更新する(タスクの削除もこのユーズケースを用いる status=2 にする)
 	UpdateTask(c echo.Context, taskId, userId int64, title, detail string, status int64) error
 }
 
@@ -24,7 +27,6 @@ func NewTaskUsecase(taskRepository repository.ITaskRepository) ITaskUsecase{
 	}
 }
 
-// 指定したユーザのタスクをすべて取得する
 func (tu *TaskUsecase) FindAllTask(c echo.Context, userId int64) ([]*model.Task, error) {
 	tasks, err := tu.taskRepository.FindAll(userId)
 	if err != nil {
@@ -33,7 +35,6 @@ func (tu *TaskUsecase) FindAllTask(c echo.Context, userId int64) ([]*model.Task,
 	return tasks, nil
 }
 
-// タスクを新規作成する
 func (tu *TaskUsecase) CreateTask(c echo.Context, userId int64, title, detail string, status int64) error {
 	task := model.NewTask(userId, title, detail, status)
 	if err := tu.taskRepository.Create(task); err != nil {
@@ -46,7 +47,7 @@ func (tu *TaskUsecase) CreateTask(c echo.Context, userId int64, title, detail st
 func (tu *TaskUsecase) UpdateTask(c echo.Context, taskId, userId int64, title, detail string, status int64) error {
 	exsistingTask, err := tu.taskRepository.FindById(taskId)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusNotFound, "対称のタスクが見つかりません")
+		return echo.NewHTTPError(http.StatusNotFound, "対象のタスクが見つかりません")
 	}
 
 	updatedTask := exsistingTask.Update(title, detail, status)
