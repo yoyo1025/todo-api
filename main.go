@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 	"todo-api/database"
 	"todo-api/infrastructure/persistence"
 	"todo-api/interface/handler"
@@ -42,6 +43,10 @@ func main() {
 	app.GET("/task/:userId", taskHandler.HandleGetAllTasks)
 	app.POST("/task/:userId", taskHandler.HandleCreateTask)
 	app.PUT("/task/:userId/:taskId", taskHandler.HandleUpdateTask)
+
+	app.GET("/hello", func(c echo.Context) error {
+		return c.JSON(http.StatusOK, "hello world!")
+	})
 
 	app.Logger.Fatal(app.Start(":3000"))
 }
