@@ -24,7 +24,10 @@ func main() {
 	}))
 
 	app.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-    AllowOrigins:     []string{"http://localhost:3000"},
+    AllowOrigins:     []string{
+			"http://localhost:3000",
+			"https://todo-front-ochre.vercel.app",
+		},
     AllowMethods:     []string{echo.GET, echo.POST, echo.PUT, echo.DELETE, echo.OPTIONS},
     AllowHeaders:     []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
     AllowCredentials: true,
