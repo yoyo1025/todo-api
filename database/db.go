@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"todo-api/infrastructure/persistence"
+	"todo-api/infrastructure/record"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -38,7 +38,7 @@ func initDB() {
 
 	fmt.Println("Successfully connected to the database!")
 
-	db.AutoMigrate(&persistence.TaskRecord{}, &persistence.UserRecord{})
+	db.AutoMigrate(&record.TaskRecord{}, &record.UserRecord{})
 }
 
 func GetDB() *gorm.DB {

@@ -3,6 +3,7 @@ package persistence
 import (
 	"todo-api/domain/model"
 	"todo-api/domain/repository"
+	"todo-api/infrastructure/record"
 
 	"gorm.io/gorm"
 )
@@ -18,7 +19,7 @@ func NewUserPersistence(db *gorm.DB) repository.IUserRepository  {
 }
 
 func (up *UserPersistence) FindByEmail(email string) (*model.User, error)  {
-	var ur UserRecord
+	var ur record.UserRecord
 	result := up.db.Where("email = ?", email).Find(&ur)
 	if result.Error != nil {
 		return nil, result.Error
@@ -38,7 +39,7 @@ func (up *UserPersistence) SignUp(user *model.User) (*model.User, error) {
 	}
 
 	// UserRecord の作成
-	userRecord := &UserRecord{
+	userRecord := &record.UserRecord{
 		Name:  user.GetName(),
 		Email: user.GetEmail(),
 	}
