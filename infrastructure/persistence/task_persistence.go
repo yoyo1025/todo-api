@@ -41,7 +41,7 @@ func (tp *TaskQueryPersistence) FindAll(userId int64) ([]*querytask.Task, error)
 
 func (tp *TaskQueryPersistence) FindById(taskId int64) (*querytask.Task, error) {
 	var task *querytask.Task
-	result := tp.db.Table("task_records").Where("task_id = ?", taskId).Scan(&task)
+	result := tp.db.Table("task_records").Where("id = ?", taskId).Scan(&task)
 	if result.Error != nil {
 		return nil, result.Error
 	}
