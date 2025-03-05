@@ -4,7 +4,8 @@ import (
 	"net/http"
 	"strconv"
 	"todo-api/presentation/dto"
-	"todo-api/usecase"
+	commandtask "todo-api/usecase/task/command-task"
+	querytask "todo-api/usecase/task/query-task"
 
 	"github.com/labstack/echo/v4"
 )
@@ -16,12 +17,14 @@ type ITaskHandler interface {
 }
 
 type TaskHandler struct {
-	taskUsecase usecase.ITaskUsecase
+	taskCommandUsecase commandtask.ITaskCommandUsecase
+	taskQueryUsecase querytask.ITaskQueryUsecase
 }
 
-func NewTaskHandler(taskUsecase usecase.ITaskUsecase) ITaskHandler {
+func NewTaskHandler(taskCommandUsecase commandtask.ITaskCommandUsecase, taskQueryUsecase querytask.ITaskQueryUsecase) ITaskHandler {
 	return &TaskHandler {
-		taskUsecase: taskUsecase,
+		taskCommandUsecase: taskCommandUsecase,
+		taskQueryUsecase: taskQueryUsecase,
 	}
 }
 
@@ -30,11 +33,11 @@ func (th TaskHandler) HandleGetAllTasks(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	tasks, err := th.taskUsecase.FindAllTask(c, int64(userId))
+	tasks, err := th.taskQueryUsecase.FindAllTask(c, int64(userId))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, "データ取得に失敗")
 	}
-	return c.JSON(http.StatusOK, dto.ToTaskResponses(tasks))
+	return c.JSON(http.StatusOK, tasks)
 }
 
 func (th TaskHandler) HandleCreateTask(c echo.Context) error {
@@ -46,7 +49,7 @@ func (th TaskHandler) HandleCreateTask(c echo.Context) error {
 	if err := c.Bind(&task); err != nil {
 		return err
 	}
-	err = th.taskUsecase.CreateTask(c, int64(userId), task.Title, task.Detail, task.Status)
+	err = th.taskCommandUsecase.CreateTask(c, int64(userId), task.Title, task.Detail, task.Status)
 	if err != nil {
 		return err
 	}
@@ -62,12 +65,11 @@ func (th TaskHandler) HandleUpdateTask(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-
 	var task dto.TaskRequest
 	if err := c.Bind(&task); err != nil {
 		return err
 	}
-	err = th.taskUsecase.UpdateTask(c, int64(taskId), int64(userId), task.Title, task.Detail, task.Status)
+	err = th.taskCommandUsecase.UpdateTask(c, int64(taskId), int64(userId), task.Title, task.Detail, task.Status)
 	if err != nil {
 		return err
 	}

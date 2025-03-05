@@ -7,6 +7,8 @@ import (
 	"todo-api/infrastructure/persistence"
 	"todo-api/presentation/handler"
 	"todo-api/usecase"
+	commandtask "todo-api/usecase/task/command-task"
+	querytask "todo-api/usecase/task/query-task"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -26,7 +28,7 @@ func main() {
 	app.Use(middleware.CORSWithConfig(middleware.CORSConfig{
     AllowOrigins:     []string{
 			"http://localhost:3000",
-			"https://todo-front-ochre.vercel.app",
+			// "https://todo-front-ochre.vercel.app",
 		},
     AllowMethods:     []string{echo.GET, echo.POST, echo.PUT, echo.DELETE, echo.OPTIONS},
     AllowHeaders:     []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
@@ -39,9 +41,12 @@ func main() {
 
 	app.POST("/api/auth/github", userHandler.HandleLogin)
 
-	taskPersistence := persistence.NewTaskPersistence(db)
-	taskUsecase := usecase.NewTaskUsecase(taskPersistence)
-	taskHandler := handler.NewTaskHandler(taskUsecase)
+	taskCommandPersistence := persistence.NewTaskCommandPersistence(db)
+	taskQueryPersistence := persistence.NewTaskQueryPersistence(db)
+	taskCommandUsecase := commandtask.NewTaskCommandUsecase(taskCommandPersistence)
+	taskQueryUsecase := querytask.NewTaskQueryUsecase(taskQueryPersistence)
+
+	taskHandler := handler.NewTaskHandler(taskCommandUsecase, taskQueryUsecase)
 
 	app.GET("/task/:userId", taskHandler.HandleGetAllTasks)
 	app.POST("/task/:userId", taskHandler.HandleCreateTask)
@@ -51,5 +56,5 @@ func main() {
 		return c.JSON(http.StatusOK, "hello world!")
 	})
 
-	app.Logger.Fatal(app.Start(":30000"))
+	app.Logger.Fatal(app.Start(":3000"))
 }
