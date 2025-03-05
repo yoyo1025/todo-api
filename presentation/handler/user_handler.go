@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
-	"todo-api/interface/dto"
+	"todo-api/presentation/dto"
 	"todo-api/usecase"
 
 	"github.com/labstack/echo/v4"

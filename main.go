@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"todo-api/database"
 	"todo-api/infrastructure/persistence"
-	"todo-api/interface/handler"
+	"todo-api/presentation/handler"
 	"todo-api/usecase"
 
 	"github.com/labstack/echo/v4"

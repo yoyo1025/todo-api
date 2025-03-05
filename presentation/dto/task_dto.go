@@ -2,6 +2,13 @@ package dto
 
 import "todo-api/domain/model"
 
+type TaskRequest struct {
+  Title  string `json:"title"`
+  Detail string `json:"detail"`
+  Status int64  `json:"status"`
+}
+
+
 type TaskResponse struct {
 	ID     uint  `json:"id"`
   UserID int64  `json:"user_id"`
@@ -12,7 +19,6 @@ type TaskResponse struct {
 
 func ToTaskResponse(t *model.Task) TaskResponse {
 	return TaskResponse{
-		ID:			uint(t.GetId()),
 		UserID: t.GetUserId(),
 		Title:  t.GetTitle(),
 		Detail: t.GetDetail(),

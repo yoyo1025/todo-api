@@ -3,7 +3,7 @@ package handler
 import (
 	"net/http"
 	"strconv"
-	"todo-api/interface/dto"
+	"todo-api/presentation/dto"
 	"todo-api/usecase"
 
 	"github.com/labstack/echo/v4"

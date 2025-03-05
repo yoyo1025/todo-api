@@ -26,7 +26,6 @@ func toDomain(r TaskRecord) (*model.Task, error) {
 	if task == nil {
 		return nil, errors.New("タスクの生成に失敗しました")
 	}
-	task.SetId(r.ID)
 	return task, nil
 }
 
