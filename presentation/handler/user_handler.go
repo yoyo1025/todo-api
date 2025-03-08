@@ -117,13 +117,10 @@ func (uh *UserHandler) HandleLogin(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-
-	if user.GetEmail() == "" {
-		newUser, err := uh.commandUserUsecase.SingUp(c,username, email)
-		if err != nil {
+	if user == nil {
+		if err := uh.commandUserUsecase.SingUp(c, username, email); err != nil {
 			return err
 		}
-		return c.JSON(http.StatusOK, dto.ToUserResponse(newUser))
 	}
-	return c.JSON(http.StatusOK, dto.ToUserResponse(user))
+	return c.JSON(http.StatusOK, user)
 }

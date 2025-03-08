@@ -4,6 +4,7 @@ import (
 	"todo-api/domain/model"
 	commandRepo "todo-api/domain/repository"
 	"todo-api/infrastructure/record"
+	"todo-api/infrastructure/response"
 	queryRepo "todo-api/usecase/query/repository"
 
 	"gorm.io/gorm"
@@ -25,24 +26,21 @@ func NewQueryUserPersistence(db *gorm.DB) queryRepo.IQueryUserRepository {
 	}
 }
 
-func (up *UserPersistence) FindByEmail(email string) (*model.User, error)  {
-	var ur record.UserRecord
-	result := up.db.Where("email = ?", email).Find(&ur)
+func (up *UserPersistence) FindByEmail(email string) (*response.User, error)  {
+	var user *response.User
+	result := up.db.Table("user_records").Where("email = ?", email).Scan(&user)
 	if result.Error != nil {
 		return nil, result.Error
 	}
-
-	user := model.NewUser(ur.Name, ur.Email)
-	user.ID = ur.ID
 	return user, nil
 }
 
 
-func (up *UserPersistence) SignUp(user *model.User) (*model.User, error) {
+func (up *UserPersistence) SignUp(user *model.User) error {
 	// トランザクション開始
 	tx := up.db.Begin()
 	if tx.Error != nil {
-		return nil, tx.Error
+		return tx.Error
 	}
 
 	// UserRecord の作成
@@ -54,17 +52,13 @@ func (up *UserPersistence) SignUp(user *model.User) (*model.User, error) {
 	// ユーザーを作成
 	if err := tx.Create(&userRecord).Error; err != nil {
 		tx.Rollback()
-		return nil, err
+		return err
 	}
 
 	// トランザクションをコミット
 	if err := tx.Commit().Error; err != nil {
-		return nil, err
+		return err
 	}
 
-	// model.User を作成して返す
-	newUser := model.NewUser(userRecord.Name, userRecord.Email)
-	newUser.ID = userRecord.ID
-
-	return newUser, nil
+	return nil
 }

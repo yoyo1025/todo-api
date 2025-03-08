@@ -4,5 +4,5 @@ import "todo-api/domain/model"
 
 type ICommandUserRepository interface {
 	// ユーザを新規登録する
-	SignUp(user *model.User) (*model.User, error)
+	SignUp(user *model.User) error
 }

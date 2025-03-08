@@ -10,7 +10,7 @@ import (
 
 type ICommandUserUsecase interface {
 	// ユーザを新規登録する
-	SingUp(c echo.Context, name, email string) (*model.User, error)
+	SingUp(c echo.Context, name, email string) error
 }
 
 type CommandUserUsecase struct {
@@ -23,11 +23,10 @@ func NewCommandUserUsecase(commandUserRepository commandRepo.ICommandUserReposit
 	}
 }
 
-func (uu *CommandUserUsecase) SingUp(c echo.Context, name, email string) (*model.User, error) {
+func (uu *CommandUserUsecase) SingUp(c echo.Context, name, email string) error {
 	user := model.NewUser(name, email)
-	newUser, err := uu.commandUserRepository.SignUp(user)
-	if err != nil {
-		return nil, echo.NewHTTPError(http.StatusInternalServerError, "ユーザの取得に失敗")
+	if err := uu.commandUserRepository.SignUp(user); err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "ユーザの取得に失敗")
 	}
-	return newUser, nil
+	return nil
 }
