@@ -1,4 +1,4 @@
-package querytask
+package response
 
 type Task struct {
 	TaskID int64 `json:"taskId" gorm:"column:id"`

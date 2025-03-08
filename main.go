@@ -7,8 +7,8 @@ import (
 	"todo-api/infrastructure/persistence"
 	"todo-api/presentation/handler"
 	"todo-api/usecase"
-	commandtask "todo-api/usecase/task/command-task"
-	querytask "todo-api/usecase/task/query-task"
+	"todo-api/usecase/command"
+	"todo-api/usecase/query"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -43,8 +43,8 @@ func main() {
 
 	taskCommandPersistence := persistence.NewTaskCommandPersistence(db)
 	taskQueryPersistence := persistence.NewTaskQueryPersistence(db)
-	taskCommandUsecase := commandtask.NewTaskCommandUsecase(taskCommandPersistence)
-	taskQueryUsecase := querytask.NewTaskQueryUsecase(taskQueryPersistence)
+	taskCommandUsecase := command.NewTaskCommandUsecase(taskCommandPersistence)
+	taskQueryUsecase := query.NewTaskQueryUsecase(taskQueryPersistence)
 
 	taskHandler := handler.NewTaskHandler(taskCommandUsecase, taskQueryUsecase)
 

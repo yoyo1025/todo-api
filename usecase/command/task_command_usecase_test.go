@@ -1,4 +1,4 @@
-package commandtask
+package command
 
 import (
 	"errors"

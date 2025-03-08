@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"strconv"
 	"todo-api/presentation/dto"
-	commandtask "todo-api/usecase/task/command-task"
-	querytask "todo-api/usecase/task/query-task"
+	"todo-api/usecase/command"
+	"todo-api/usecase/query"
 
 	"github.com/labstack/echo/v4"
 )
@@ -17,11 +17,11 @@ type ITaskHandler interface {
 }
 
 type TaskHandler struct {
-	taskCommandUsecase commandtask.ITaskCommandUsecase
-	taskQueryUsecase querytask.ITaskQueryUsecase
+	taskCommandUsecase command.ITaskCommandUsecase
+	taskQueryUsecase query.ITaskQueryUsecase
 }
 
-func NewTaskHandler(taskCommandUsecase commandtask.ITaskCommandUsecase, taskQueryUsecase querytask.ITaskQueryUsecase) ITaskHandler {
+func NewTaskHandler(taskCommandUsecase command.ITaskCommandUsecase, taskQueryUsecase query.ITaskQueryUsecase) ITaskHandler {
 	return &TaskHandler {
 		taskCommandUsecase: taskCommandUsecase,
 		taskQueryUsecase: taskQueryUsecase,

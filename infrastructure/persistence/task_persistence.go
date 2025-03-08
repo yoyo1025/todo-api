@@ -5,7 +5,8 @@ import (
 	"todo-api/domain/model"
 	"todo-api/domain/repository"
 	"todo-api/infrastructure/record"
-	querytask "todo-api/usecase/task/query-task"
+	"todo-api/infrastructure/response"
+	queryRepo "todo-api/usecase/query/repository"
 
 	"gorm.io/gorm"
 )
@@ -24,14 +25,14 @@ func NewTaskCommandPersistence(db *gorm.DB) repository.ITaskCommandRepository {
 	}
 }
 
-func NewTaskQueryPersistence(db *gorm.DB) querytask.ITaskQueryRepository {
+func NewTaskQueryPersistence(db *gorm.DB) queryRepo.ITaskQueryRepository{
 	return &TaskQueryPersistence{
 		db: db,
 	}
 }
 
-func (tp *TaskQueryPersistence) FindAll(userId int64) ([]*querytask.Task, error)  {
-	var tasks []*querytask.Task
+func (tp *TaskQueryPersistence) FindAllTask(userId int64) ([]*response.Task, error) {
+	var tasks []*response.Task
 	result := tp.db.Table("task_records").Where("user_id = ?", userId).Scan(&tasks)
 	if result.Error != nil {
 		return nil, result.Error
@@ -39,8 +40,8 @@ func (tp *TaskQueryPersistence) FindAll(userId int64) ([]*querytask.Task, error)
 	return tasks, nil
 }
 
-func (tp *TaskQueryPersistence) FindById(taskId int64) (*querytask.Task, error) {
-	var task *querytask.Task
+func (tp *TaskQueryPersistence) FindTaskById(taskId int64) (*response.Task, error){
+	var task *response.Task
 	result := tp.db.Table("task_records").Where("id = ?", taskId).Scan(&task)
 	if result.Error != nil {
 		return nil, result.Error
