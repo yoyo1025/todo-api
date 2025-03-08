@@ -3,24 +3,13 @@ package persistence
 import (
 	"testing"
 
+	"todo-api/database"
 	"todo-api/domain/model"
 	"todo-api/infrastructure/record"
-
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
 )
 
-func setupTestDB() *gorm.DB {
-	db, err := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{})
-	if err != nil {
-		panic("failed to connect database")
-	}
-	db.AutoMigrate(&record.TaskRecord{})
-	return db
-}
-
 func TestCreateTask(t *testing.T) {
-	db := setupTestDB()
+	db := database.SetupTestDB()
 	repo := NewTaskCommandPersistence(db)
 	task := model.NewTask(1, "Test Title", "Test Detail", 0)
 
@@ -40,7 +29,7 @@ func TestCreateTask(t *testing.T) {
 }
 
 func TestUpdateTask(t *testing.T) {
-	db := setupTestDB()
+	db := database.SetupTestDB()
 	repo := NewTaskCommandPersistence(db)
 	task := model.NewTask(1, "Old Title", "Old Detail", 0)
 	db.Create(&record.TaskRecord{UserID: task.GetUserId(), Title: task.GetTitle(), Detail: task.GetDetail(), Status: task.GetStatus()})
@@ -65,7 +54,7 @@ func TestUpdateTask(t *testing.T) {
 }
 
 func TestFindAllTasks(t *testing.T) {
-	db := setupTestDB()
+	db := database.SetupTestDB()
 	queryRepo := NewTaskQueryPersistence(db)
 	db.Create(&record.TaskRecord{UserID: 1, Title: "Task 1", Detail: "Detail 1", Status: 0})
 	db.Create(&record.TaskRecord{UserID: 1, Title: "Task 2", Detail: "Detail 2", Status: 1})
@@ -80,7 +69,7 @@ tasks, err := queryRepo.FindAllTask(1)
 }
 
 func TestFindTaskById(t *testing.T) {
-	db := setupTestDB()
+	db := database.SetupTestDB()
 	queryRepo := NewTaskQueryPersistence(db)
 	db.Create(&record.TaskRecord{UserID: 1, Title: "Task 1", Detail: "Detail 1", Status: 0})
 

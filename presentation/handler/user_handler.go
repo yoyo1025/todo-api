@@ -6,7 +6,8 @@ import (
 	"net/http"
 	"strings"
 	"todo-api/presentation/dto"
-	"todo-api/usecase"
+	"todo-api/usecase/command"
+	"todo-api/usecase/query"
 
 	"github.com/labstack/echo/v4"
 )
@@ -16,12 +17,14 @@ type IUserHandler interface {
 }
 
 type UserHandler struct {
-	userUsecase usecase.IUserUsecase
+	commandUserUsecase command.ICommandUserUsecase
+	queryUserUsecase query.IQueryUserUsecase
 }
 
-func NewUserHandler(userUsecase usecase.IUserUsecase) IUserHandler  {
+func NewUserHandler(commandUserUsecase command.ICommandUserUsecase, queryUserUsecase query.IQueryUserUsecase) IUserHandler {
 	return &UserHandler {
-		userUsecase: userUsecase,
+		commandUserUsecase: commandUserUsecase,
+		queryUserUsecase: queryUserUsecase,
 	}
 }
 
@@ -109,13 +112,14 @@ func (uh *UserHandler) HandleLogin(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 
-	user, err := uh.userUsecase.FindByEmail(c, email)
+	// user, err := uh.userUsecase.FindByEmail(c, email)
+	user, err := uh.queryUserUsecase.FindByEmail(c, email)
 	if err != nil {
 		return err
 	}
 
 	if user.GetEmail() == "" {
-		newUser, err := uh.userUsecase.SingUp(c, username, email)
+		newUser, err := uh.commandUserUsecase.SingUp(c,username, email)
 		if err != nil {
 			return err
 		}

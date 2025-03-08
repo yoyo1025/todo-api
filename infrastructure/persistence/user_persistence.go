@@ -4,6 +4,7 @@ import (
 	"todo-api/domain/model"
 	commandRepo "todo-api/domain/repository"
 	"todo-api/infrastructure/record"
+	queryRepo "todo-api/usecase/query/repository"
 
 	"gorm.io/gorm"
 )
@@ -12,8 +13,14 @@ type UserPersistence struct {
 	db *gorm.DB
 }
 
-func NewUserPersistence(db *gorm.DB) commandRepo.IUserRepository  {
+func NewCommandUserPersistence(db *gorm.DB) commandRepo.ICommandUserRepository  {
 	return &UserPersistence {
+		db: db,
+	}
+}
+
+func NewQueryUserPersistence(db *gorm.DB) queryRepo.IQueryUserRepository {
+	return &UserPersistence{
 		db: db,
 	}
 }

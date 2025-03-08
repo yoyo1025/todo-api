@@ -6,7 +6,6 @@ import (
 	"todo-api/database"
 	"todo-api/infrastructure/persistence"
 	"todo-api/presentation/handler"
-	"todo-api/usecase"
 	"todo-api/usecase/command"
 	"todo-api/usecase/query"
 
@@ -35,9 +34,11 @@ func main() {
     AllowCredentials: true,
 }))
 
-	userPersistence := persistence.NewUserPersistence(db)
-	userUsecase := usecase.NewUserUsecase(userPersistence)
-	userHandler := handler.NewUserHandler(userUsecase)
+	commandUserPersistence := persistence.NewCommandUserPersistence(db)
+	queryUserPersistence := persistence.NewQueryUserPersistence(db)
+	commandUserUsecase := command.NewCommandUserUsecase(commandUserPersistence)
+	queryUserusecase := query.NewQueryUserUsecase(queryUserPersistence)
+	userHandler := handler.NewUserHandler(commandUserUsecase, queryUserusecase)
 
 	app.POST("/api/auth/github", userHandler.HandleLogin)
 

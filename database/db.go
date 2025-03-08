@@ -7,6 +7,7 @@ import (
 	"todo-api/infrastructure/record"
 
 	"gorm.io/driver/postgres"
+	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
@@ -38,7 +39,22 @@ func initDB() {
 
 	fmt.Println("Successfully connected to the database!")
 
-	db.AutoMigrate(&record.TaskRecord{}, &record.UserRecord{})
+	db.AutoMigrate(
+		&record.TaskRecord{},
+		&record.UserRecord{},
+	)
+}
+
+func SetupTestDB() *gorm.DB  {
+	db, err := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{})
+	if err != nil {
+		panic("failed to connect database")
+	}
+	db.AutoMigrate(
+		&record.TaskRecord{},
+		&record.UserRecord{},
+	)
+	return db
 }
 
 func GetDB() *gorm.DB {
