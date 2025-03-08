@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"todo-api/domain/model"
-	"todo-api/domain/repository"
+	commandRepo "todo-api/domain/repository"
 
 	"github.com/labstack/echo/v4"
 )
@@ -18,10 +18,10 @@ type ITaskCommandUsecase interface {
 }
 
 type TaskCommandUsecase struct {
-	taskRepository repository.ITaskCommandRepository
+	taskRepository commandRepo.ITaskCommandRepository
 }
 
-func NewTaskCommandUsecase(taskRepository repository.ITaskCommandRepository) ITaskCommandUsecase{
+func NewTaskCommandUsecase(taskRepository commandRepo.ITaskCommandRepository) ITaskCommandUsecase{
 	return &TaskCommandUsecase {
 		taskRepository: taskRepository,
 	}

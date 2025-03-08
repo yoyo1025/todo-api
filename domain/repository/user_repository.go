@@ -1,4 +1,4 @@
-package repository
+package commandRepo
 
 import "todo-api/domain/model"
 

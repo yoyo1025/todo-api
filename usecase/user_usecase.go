@@ -3,7 +3,7 @@ package usecase
 import (
 	"net/http"
 	"todo-api/domain/model"
-	"todo-api/domain/repository"
+	commandRepo "todo-api/domain/repository"
 
 	"github.com/labstack/echo/v4"
 )
@@ -17,10 +17,10 @@ type IUserUsecase interface {
 }
 
 type UserUsecase struct {
-	userRepository repository.IUserRepository
+	userRepository commandRepo.IUserRepository
 }
 
-func NewUserUsecase(userRepository repository.IUserRepository) IUserUsecase {
+func NewUserUsecase(userRepository commandRepo.IUserRepository) IUserUsecase {
 	return &UserUsecase {
 		userRepository: userRepository,
 	}

@@ -2,7 +2,7 @@ package persistence
 
 import (
 	"todo-api/domain/model"
-	"todo-api/domain/repository"
+	commandRepo "todo-api/domain/repository"
 	"todo-api/infrastructure/record"
 
 	"gorm.io/gorm"
@@ -12,7 +12,7 @@ type UserPersistence struct {
 	db *gorm.DB
 }
 
-func NewUserPersistence(db *gorm.DB) repository.IUserRepository  {
+func NewUserPersistence(db *gorm.DB) commandRepo.IUserRepository  {
 	return &UserPersistence {
 		db: db,
 	}

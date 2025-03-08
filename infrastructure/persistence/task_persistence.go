@@ -3,7 +3,7 @@ package persistence
 import (
 	"time"
 	"todo-api/domain/model"
-	"todo-api/domain/repository"
+	commandRepo "todo-api/domain/repository"
 	"todo-api/infrastructure/record"
 	"todo-api/infrastructure/response"
 	queryRepo "todo-api/usecase/query/repository"
@@ -19,7 +19,7 @@ type TaskQueryPersistence struct {
 	db *gorm.DB
 }
 
-func NewTaskCommandPersistence(db *gorm.DB) repository.ITaskCommandRepository {
+func NewTaskCommandPersistence(db *gorm.DB) commandRepo.ITaskCommandRepository {
 	return &TaskCommandPersistence{
 		db: db,
 	}
